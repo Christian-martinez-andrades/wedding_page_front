@@ -36,13 +36,16 @@
   "dresscode_h3_gentlemen_6": "Sneakers, casual loafers, or casual clothing",
   "dresscode_h3_gentlemen_7": "Rolled-up sleeves, shorts, or jeans",
   "form_title": "Are you attending?",
-  "form_description": "There is some information we would need to know to organize every detail. Please kindly respond to the survey before September 10th",
+  "form_description": "There is some information we would need to know to organize every detail. Please kindly respond to the survey before February 10th",
   "form_name_label": "Your Name",
   "form_guests_label": "How many children will be coming with you? (Please specify the age in additional information section)",
   "form_guests_placeholder": "Select number of children",
   "form_arrival_bus": "Arrival Bus (15:00)",
   "form_arrival_bus_yes": "I'm using it",
   "form_arrival_bus_no": "Not using it",
+  "form_couple": "Will you be coming with couple? (If yes, please specify the name in the additional comments.)",
+  "form_couple_no": "No",
+  "form_couple_yes": "Yes",
   "form_return_bus": "Return bus",
   "form_return_bus_no": "Not using it",
   "form_menu": "Any specific diet?",
@@ -70,5 +73,9 @@
   "account_number": "29667071",
   "music_survey": "Contact us",
   "music_survey_desc": "If you have any questions, please contact us at the following phone numbers:",
-  "submit_button": "We’ll be happy to assist you!"
+  "submit_button": "We’ll be happy to assist you!",
+  "swal_done_title": "Done",
+  "swal_done_text": "Sent successfully.",
+  "swal_error_title": "Error",
+  "swal_error_text": "Something went wrong. Please try again!"
 }

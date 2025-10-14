@@ -35,13 +35,16 @@
   "dresscode_h3_gentlemen_6": "Zapatillas deportivas, mocasines informales o ropa casual",
   "dresscode_h3_gentlemen_7": "Mangas remangadas, pantalones cortos o pantalón vaquero",
   "form_title": "¿Asistirás?",
-  "form_description": "Hay algunos datos que necesitamos para organizar cada detalle. Por favor, responde a la encuesta antes del 10 de septiembre",
+  "form_description": "Hay algunos datos que necesitamos para organizar cada detalle. Por favor, responde a la encuesta antes del 10 de Febrero",
   "form_name_label": "Tu nombre",
   "form_guests_label": "¿Cuantos niños vienen contigo? (Dinos su edad en los comentarios adicionales)",
   "form_guests_placeholder": "Número de niños ",
   "form_arrival_bus": "Autobús hacia la Hacienda (15:00)",
   "form_arrival_bus_yes": "Lo utilizaré",
   "form_arrival_bus_no": "No lo utilizaré",
+    "form_couple": "¿Vendrás acompañado? (En caso afirmativo, indique el nombre en los comentarios adicionales)",
+  "form_couple_no": "No",
+  "form_couple_yes": "Sí",
   "form_return_bus": "Autobús de regreso",
   "form_return_bus_no": "No lo utilizaré",
   "form_menu": "¿Sigues alguna dieta estecífica?",
@@ -69,5 +72,9 @@
   "account_number": "2100 6318 1602 0005 0487",
   "music_survey": "Contáctanos",
   "music_survey_desc": "Para cualquier duda contáctanos a los siguientes teléfonos:",
-  "submit_button": " ¡Estaremos encantados de atenderte!"
+  "submit_button": " ¡Estaremos encantados de atenderte!",
+  "swal_done_title": "Hecho",
+  "swal_done_text": "Enviado correctamente.",
+  "swal_error_title": "Error",
+  "swal_error_text": "Algo salió mal. ¡Por favor inténtalo de nuevo!"
 }
