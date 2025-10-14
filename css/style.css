@@ -672,7 +672,7 @@ h3 {
   /* line 4, ../../Arafath/CL/CL september/212. Wedding/HTML/scss/_slick-nav.scss */
   .mobile_menu {
     position: absolute;
-    right: 0px;
+    right: 0.5em;
     width: 100%;
     z-index: 9;
   }
@@ -690,7 +690,7 @@ h3 {
   margin-top: 5px;
   position: absolute;
   left: 0;
-  right: 0;
+  right: 0.5em;
   margin: auto;
   top: 0px;
 }
@@ -880,7 +880,7 @@ h3 {
   text-transform: capitalize;
   font-weight: 400;
   display: ruby-text;
-  padding: 40px 23px 20px 23px;
+  padding: 50px 23px 26px 23px;
   font-family: "Muli", sans-serif;
   position: relative;
 }
@@ -5660,13 +5660,85 @@ a:focus.contact_link {
 .link-like {
   cursor: pointer;
   text-decoration: none;
-  /* sin subrayado por defecto */
+  color: #727272;
+  /* color por defecto */
+  position: relative;
+  display: inline-block;
+  transition: color 0.5s;
 }
 
 .link-like:hover,
 .link-like:focus {
   text-decoration: underline;
-  /* subrayado al hover o focus */
   outline: none;
-  /* opcional, quita el borde de foco si no quieres */
+}
+
+/* Animación de arcoíris rápida */
+@keyframes rainbow {
+  0% {
+    color: red;
+  }
+
+  14% {
+    color: orange;
+  }
+
+  28% {
+    color: yellow;
+  }
+
+  42% {
+    color: green;
+  }
+
+  57% {
+    color: blue;
+  }
+
+  71% {
+    color: indigo;
+  }
+
+  85% {
+    color: violet;
+  }
+
+  100% {
+    color: #727272;
+  }
+
+  /* vuelve al color por defecto */
+}
+
+.rainbow-animation {
+  animation: rainbow 1s linear;
+}
+
+/* Estilo de los dedos */
+.pointer {
+  position: absolute;
+  top: 7%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  opacity: 0;
+  position: relative;
+  display: inline-block;
+  transition: opacity 0.2s;
+}
+
+.pointer.left {
+  left: 0em;
+}
+
+.pointer.right {
+  right: 0em;
+}
+
+.show-pointer {
+  opacity: 99;
+  z-index: 99;
+}
+
+.ornament {
+   transition: opacity 0.2s;
 }
