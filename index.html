@@ -198,10 +198,10 @@
                                     </svg>
                                     Barceló
                                     Montecastillo Golf </a>
-                                <span id="pointer_left" class="pointer left">👉</span>
+                                <!-- <span id="pointer_left" class="pointer left">👉</span> -->
                                 <p data-i18n="party_desc" id="openDialog" class="link-like"></p>
-                                <span id="pointer_right" class="pointer right">👈</span>
-                                <br>
+                                <!-- <span id="pointer_right" class="pointer right">👈</span>
+                                <br> -->
                                 <img class="ornament" src="img/program_details/ornaments.png" alt="">
                             </div>
                         </div>
@@ -241,14 +241,14 @@
             // Cada 5 segundos, añade la animación y muestra los dedos
             setInterval(() => {
                 element.classList.add('rainbow-animation');
-                leftFinger.classList.add('show-pointer');
-                rightFinger.classList.add('show-pointer');
+        //        leftFinger.classList.add('show-pointer');
+          //        rightFinger.classList.add('show-pointer');
 
                 // Remueve la animación y oculta los dedos después de 1s
                 setTimeout(() => {
                     element.classList.remove('rainbow-animation');
-                    leftFinger.classList.remove('show-pointer');
-                    rightFinger.classList.remove('show-pointer');
+              //        leftFinger.classList.remove('show-pointer');
+             //         rightFinger.classList.remove('show-pointer');
                 }, 1000);
             }, 5000);
         </script>

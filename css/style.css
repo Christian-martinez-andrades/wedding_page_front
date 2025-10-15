@@ -5663,7 +5663,6 @@ a:focus.contact_link {
   color: #727272;
   /* color por defecto */
   position: relative;
-  display: inline-block;
   transition: color 0.5s;
 }
 
