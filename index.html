@@ -319,8 +319,7 @@
                                                     </div>
                                                     <div class="col-xl-12">
                                                         <label data-i18n="form_couple"></label>
-                                                        <select class="form-select wide" name="Pareja"
-                                                            id="default-select" class="">
+                                                        <select class="form-select wide" id="couple" name="Pareja">
                                                             <option data-i18n="form_couple_no" value="No"
                                                                 data-i18n-option="form_couple_no">No
                                                             </option>
@@ -376,6 +375,42 @@
                                                         </select>
                                                     </div>
 
+                                                    <div class="col-xl-12">
+                                                        <label data-i18n="dish1">Main course (Guest)</label>
+                                                        <select class="form-select wide" name="Plato_Principal">
+                                                            <option value="vegetariana" data-i18n-option="dish_option1">
+                                                                "Menú vegetariano</option>
+                                                            <option value="pescado" data-i18n-option="dish_option2">
+                                                                Corvina al horno con gambones al palo cortado sobre
+                                                                verduritas salteadas
+                                                            </option>
+                                                            <option value="carne" data-i18n-option="dish_option3">
+                                                                Solomillo de ternera con foie y salsa de trufa al PX con
+                                                                pastel de patata
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-xl-12" style="display: none;"
+                                                        id="companionDishWrapper">
+                                                        <label data-i18n="dish2">Main course (Guest’s companion)</label>
+                                                        <select class="form-select wide"
+                                                            name="Plato_Principal_Acompañante">
+                                                            <option value="No" selected data-i18n-option="form_menu_no">
+                                                                No
+                                                            </option>
+                                                            <option value="vegetariana" data-i18n-option="dish_option1">
+                                                                "Menú vegetariano</option>
+                                                            <option value="pescado" data-i18n-option="dish_option2">
+                                                                Corvina al horno con gambones al palo cortado sobre
+                                                                verduritas salteadas
+                                                            </option>
+                                                            <option value="carne" data-i18n-option="dish_option3">
+                                                                Solomillo de ternera con foie y salsa de trufa al PX con
+                                                                pastel de patata
+                                                            </option>
+                                                        </select>
+                                                    </div>
 
                                                     <div class="col-xl-12">
                                                         <textarea data-i18n-placeholder="form_additional"
@@ -398,7 +433,24 @@
             </div>
         </div>
     </section>
+    <script>
+        document.addEventListener("click", function () {
+            const couple = document.getElementById("couple");
+            const companionWrapper = document.getElementById("companionDishWrapper");
 
+            if (!couple || !companionWrapper) return;
+
+            // Esperamos un micro-momento a que Nice Select actualice el value
+            setTimeout(() => {
+                if (couple.value === "Yes") {
+                    companionWrapper.style.display = "block";
+                } else {
+                    companionWrapper.style.display = "none";
+                }
+            }, 0);
+        });
+
+    </script>
     <!-- HTML: el loading overlay -->
     <div id="loading-overlay" style="
   display: none !important;
