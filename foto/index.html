@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sube tu foto 📸</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #b04269;
+            --secondary-color: #df91ae;
+            --bg-gradient: linear-gradient(180deg, #fff5f8 0%, #ffffff 100%);
+            --shadow: 0 15px 50px rgba(176, 66, 105, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            /* Mantenemos la pantalla estática tipo App */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- BOTÓN INSTALAR --- */
+        #installBtn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+            /* Por encima de todo */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .app-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            /* Distribuye los elementos en todo el alto */
+            align-items: center;
+            padding: 20px 15px;
+            max-width: 500px;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- SECCIÓN CENTRAL: CÁMARA Y FLORES --- */
+        .visual-area {
+            position: relative;
+            width: 95%;
+            /* Ocupa casi todo el ancho */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .camera-frame {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: #000;
+            border-radius: 40px;
+            overflow: hidden;
+            border: 10px solid white;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 10;
+            /* POR ENCIMA de las flores */
+        }
+
+        video,
+        #preview {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+
+        /* --- FLORES GIGANTES POR DEBAJO --- */
+        .flower {
+            position: absolute;
+            width: 180px;
+            /* Flores mucho más grandes */
+            z-index: 1;
+            /* POR DEBAJO de la cámara */
+            pointer-events: none;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+            opacity: 0.9;
+        }
+
+        .top-left {
+            top: -40px;
+            left: -50px;
+            transform: rotate(-15deg);
+        }
+
+        .bottom-right {
+            bottom: -40px;
+            right: -50px;
+            transform: rotate(10deg);
+        }
+
+        /* --- BOTONES --- */
+        .actions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 20;
+            /* Por encima de las flores */
+        }
+
+        .btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 8px 25px rgba(176, 66, 105, 0.4);
+        }
+
+        .btn-secondary {
+            background: #fdfdfd;
+            color: #777;
+            border: 1px solid #ddd;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Estados de visibilidad */
+        .photo-taken #snap {
+            display: none;
+        }
+
+        .photo-taken #upload,
+        .photo-taken #delete {
+            display: flex;
+        }
+
+        #upload,
+        #delete {
+            display: none;
+        }
+
+        #iosMsg {
+            display: none;
+            font-size: 11px;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="installBtn"><i class="fas fa-plus-circle"></i> Instalar</button>
+
+    <div class="app-wrapper" id="mainWrapper">
+
+        <header>
+            <h1><i class="fas fa-camera"></i> COMPARTE TU FOTO</h1>
+        </header>
+
+        <button id="login-btn" class="btn btn-primary" style="margin-bottom: 5px;">
+            <i class="fab fa-google"></i> Entrar con Google
+        </button>
+
+        <div class="visual-area">
+            <img src="/img/appointment/flower-top1.png" class="flower top-left"
+                onerror="this.src='https://cdn-icons-png.flaticon.com/512/2921/2921822.png'">
+
+            <div class="camera-frame">
+                <video id="video" autoplay playsinline></video>
+                <img id="preview" style="display:none;" />
+            </div>
+
+            <img src="/img/appointment/flower-bottom1.png" class="flower bottom-right"
+                onerror="this.src='https://cdn-icons-png.flaticon.com/512/2921/2921822.png'">
+        </div>
+
+        <div class="actions">
+            <button id="snap" class="btn btn-primary">
+                <i class="fas fa-camera-retro"></i> Hacer foto
+            </button>
+
+            <button id="upload" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> Enviar foto
+            </button>
+
+            <button id="delete" class="btn btn-secondary">
+                <i class="fas fa-trash-alt"></i> Borrar y repetir
+            </button>
+            <div id="iosMsg">📱 iPhone: Mantén pulsado para guardar foto</div>
+        </div>
+    </div>
+
+    <script type="module">
+        // --- AQUÍ VA TODA TU LÓGICA DE FIREBASE (igual que antes) ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+        import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDA0PYGSCB2KydjZTykv5TjiOQXxAgAZRU",
+            authDomain: "boda-4ccf3.firebaseapp.com",
+            projectId: "boda-4ccf3",
+            storageBucket: "boda-4ccf3.firebasestorage.app",
+            messagingSenderId: "1039120964276",
+            appId: "1:1039120964276:web:699c9337fb1d27ec0415e1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const storage = getStorage();
+
+        const video = document.getElementById("video");
+        const preview = document.getElementById("preview");
+        const wrapper = document.getElementById("mainWrapper");
+        let streamGlobal = null;
+        let blob = null;
+
+        const loginBtn = document.getElementById("login-btn");
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuario logueado
+                loginBtn.style.display = "none";
+                console.log("Usuario autenticado:", user.email);
+            } else {
+                // Usuario NO logueado
+                loginBtn.style.display = "flex";
+            }
+        });
+
+        // FUNCION PARA DESCARGAR
+        function downloadLocal(blob) {
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `foto_bodaMartayChristian_${Date.now()}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            URL.revokeObjectURL(url);
+        }
+
+        // abrir camara
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+                streamGlobal = stream;
+                video.srcObject = stream;
+                video.style.display = "block";
+                preview.style.display = "none";
+                wrapper.classList.remove("photo-taken");
+            } catch (err) { alert("Acceso a cámara denegado"); }
+        }
+
+        initCamera();
+
+
+        // LOGIN
+        document.getElementById("login-btn").onclick = async () => {
+            const provider = new GoogleAuthProvider();
+            await signInWithPopup(auth, provider);
+            document.getElementById("login-btn").style.display = "none";
+        };
+
+        // HACER FOTO
+        document.getElementById("snap").onclick = async () => {
+            const user = auth.currentUser;
+            if (!user) return alert("Loguéate primero");
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext("2d").drawImage(video, 0, 0);
+            blob = await new Promise(res => canvas.toBlob(res, "image/jpeg", 0.8));
+            preview.src = URL.createObjectURL(blob);
+            preview.style.display = "block";
+            video.style.display = "none";
+            streamGlobal.getTracks().forEach(t => t.stop());
+            wrapper.classList.add("photo-taken");
+        };
+
+        // BORRAR
+        document.getElementById("delete").onclick = () => initCamera();
+
+
+        // SUBIR FOTO Y DESCARGARLA
+        document.getElementById("upload").onclick = async () => {
+            const user = auth.currentUser;
+            if (!user) return alert("Loguéate primero");
+            const fileRef = ref(storage, `fotos/${user.email}_${Date.now()}.jpg`);
+            await uploadBytes(fileRef, blob);
+            downloadLocal(blob);
+            alert("¡Subida con éxito! ❤️");
+            initCamera();
+        };
+
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) document.getElementById("iosMsg").style.display = "block";
+        document.getElementById("installBtn").onclick = () => alert("📱 Para instalar:\n\niPhone: Compartir → 'Añadir a pantalla de inicio'\nAndroid: Menú ⋮ → 'Añadir a pantalla de inicio'");
+        ;
+    </script>
+</body>
+
+</html>
