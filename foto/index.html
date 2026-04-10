@@ -8,7 +8,10 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
         :root {
             --primary-color: #b04269;
@@ -85,6 +88,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 80%;
         }
 
         .camera-frame {
@@ -98,6 +102,7 @@
             position: relative;
             z-index: 10;
             /* POR ENCIMA de las flores */
+            height: 100%;
         }
 
         video,
@@ -194,6 +199,16 @@
             color: #999;
             text-align: center;
         }
+
+        #switchCam {
+            width: 96%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 50;
+            padding: 10px;
+            border-radius: 20px;
+        }
     </style>
 </head>
 
@@ -219,7 +234,9 @@
                 <video id="video" autoplay playsinline></video>
                 <img id="preview" style="display:none;" />
             </div>
-
+            <button id="switchCam" class="btn btn-secondary">
+                <i class="fas fa-sync-alt"></i> Cambiar cámara
+            </button>
             <img src="/img/appointment/flower-bottom1.png" class="flower bottom-right"
                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/2921/2921822.png'">
         </div>
@@ -239,6 +256,8 @@
             <div id="iosMsg">📱 iPhone: Mantén pulsado para guardar foto</div>
         </div>
     </div>
+
+
 
     <script type="module">
         // --- AQUÍ VA TODA TU LÓGICA DE FIREBASE (igual que antes) ---
@@ -264,7 +283,7 @@
         const wrapper = document.getElementById("mainWrapper");
         let streamGlobal = null;
         let blob = null;
-
+        let facingMode = "environment"; // trasera por defecto
         const loginBtn = document.getElementById("login-btn");
 
         onAuthStateChanged(auth, (user) => {
@@ -292,18 +311,42 @@
             URL.revokeObjectURL(url);
         }
 
+        // CAMBIAR CAMARA
+        document.getElementById("switchCam").onclick = async () => {
+
+            // alternar cámara
+            facingMode = (facingMode === "user") ? "environment" : "user";
+
+            // detener cámara actual
+            if (streamGlobal) {
+                streamGlobal.getTracks().forEach(t => t.stop());
+            }
+
+            // reiniciar
+            await initCamera();
+        };
         // abrir camara
         async function initCamera() {
             try {
+
                 const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } }
+                    video: {
+                        facingMode: facingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
                 });
+
                 streamGlobal = stream;
                 video.srcObject = stream;
+
                 video.style.display = "block";
                 preview.style.display = "none";
                 wrapper.classList.remove("photo-taken");
-            } catch (err) { alert("Acceso a cámara denegado"); }
+
+            } catch (err) {
+                alert("No se pudo acceder a la cámara");
+            }
         }
 
         initCamera();
