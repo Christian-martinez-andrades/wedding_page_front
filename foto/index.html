@@ -44,7 +44,7 @@
         /* --- BOTÓN INSTALAR --- */
         #installBtn {
             position: fixed;
-            top: 15px;
+            top: 0;
             right: 15px;
             background: white;
             color: var(--primary-color);
@@ -72,12 +72,20 @@
             max-width: 500px;
         }
 
+        header {
+            z-index: 999;
+        }
+
         header h1 {
             font-size: 1.6rem;
             color: var(--primary-color);
             margin: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        #login-btn {
+            z-index: 999;
         }
 
         /* --- SECCIÓN CENTRAL: CÁMARA Y FLORES --- */
@@ -122,7 +130,7 @@
             /* POR DEBAJO de la cámara */
             pointer-events: none;
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
-            opacity: 0.9;
+            opacity: 0.7;
         }
 
         .top-left {
@@ -174,6 +182,34 @@
             border: 1px solid #ddd;
         }
 
+        .btn-google {
+            background: white;
+            color: #3c4043;
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            font-weight: 500;
+        }
+
+        .btn-google:hover:not(:disabled) {
+            background: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-google:active:not(:disabled) {
+            background: #f1f3f4;
+        }
+
+        .btn-google:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+
         .btn:active {
             transform: scale(0.96);
         }
@@ -201,10 +237,11 @@
         }
 
         #switchCam {
-            width: 99.5%;
+            width: calc(100% - 20px);
             position: absolute;
             top: 10px;
             left: 10px;
+            right: 10px;
             z-index: 50;
             padding: 10px;
             border-radius: 20px;
@@ -222,13 +259,18 @@
             <h1><i class="fas fa-camera"></i> COMPARTE TU FOTO</h1>
         </header>
 
-        <button id="login-btn" class="btn btn-primary" style="margin-bottom: 5px;">
-            <i class="fab fa-google"></i> Entrar con Google
+        <button id="login-btn" class="btn btn-google" style="margin-bottom: 5px;">
+            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.189-2.27h-11.3v4.28h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.59z"/>
+                <path fill="#34A853" d="M12.255 23.5c2.67 0 4.92-.87 6.56-2.36l-3.86-3c-.86.6-1.96 1-3.44 1-2.64 0-4.88-1.74-5.68-4.15h-3.98v3.12C3.715 21.3 7.565 23.5 12.255 23.5z"/>
+                <path fill="#FBBC05" d="M6.575 14.59c-.36-1.45-.556-2.97-.556-4.59s.2-3.14.556-4.59V3.2H2.595c-.92 1.87-1.456 4-1.456 6.4s.536 4.53 1.456 6.4l3.98-3.41z"/>
+                <path fill="#EA4335" d="M12.255 5.26c1.92 0 3.63.83 4.98 2.44l3.74-3.66C17.145 1.27 14.895 0 12.255 0 7.565 0 3.715 2.2 2.595 5.5l3.98 3.12c.78-2.4 3.04-4.36 5.68-4.36z"/>
+            </svg>
+            Entrar con Google
         </button>
 
         <div class="visual-area">
-            <img src="/img/appointment/flower-top1.png" class="flower top-left"
-                onerror="this.src='https://cdn-icons-png.flaticon.com/512/2921/2921822.png'">
+            <img src="/img/appointment/flower-top1.png" class="flower top-left">
 
             <div class="camera-frame">
                 <video id="video" autoplay playsinline></video>
@@ -237,8 +279,7 @@
             <button id="switchCam" class="btn btn-secondary">
                 <i class="fas fa-sync-alt"></i> Cambiar cámara
             </button>
-            <img src="/img/appointment/flower-bottom1.png" class="flower bottom-right"
-                onerror="this.src='https://cdn-icons-png.flaticon.com/512/2921/2921822.png'">
+            <img src="/img/appointment/flower-bottom1.png" class="flower bottom-right">
         </div>
 
         <div class="actions">
@@ -260,6 +301,18 @@
 
 
     <script type="module">
+
+        // Leer configuración desde archivo
+        let funcionar = false;
+        try {
+            const response = await fetch('/config.json');
+            const config = await response.json();
+            funcionar = config.firebase?.enabled || false;
+            console.log("Firebase habilitado:", funcionar);
+        } catch (err) {
+            console.warn("No se pudo leer config.json, usando valor por defecto (false):", err);
+        }
+
         // --- AQUÍ VA TODA TU LÓGICA DE FIREBASE (igual que antes) ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
@@ -274,9 +327,9 @@
             appId: "1:1039120964276:web:699c9337fb1d27ec0415e1"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const storage = getStorage();
+        const app = funcionar ? initializeApp(firebaseConfig) : null;
+        const auth = funcionar ? getAuth() : null;
+        const storage = funcionar ? getStorage() : null;
 
         const video = document.getElementById("video");
         const preview = document.getElementById("preview");
@@ -286,16 +339,25 @@
         let facingMode = "environment"; // trasera por defecto
         const loginBtn = document.getElementById("login-btn");
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Usuario logueado
-                loginBtn.style.display = "none";
-                console.log("Usuario autenticado:", user.email);
-            } else {
-                // Usuario NO logueado
-                loginBtn.style.display = "flex";
-            }
-        });
+        // Listener de autenticación - solo si Firebase está activo
+        if (funcionar && auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Usuario logueado
+                    loginBtn.style.display = "none";
+                    console.log("Usuario autenticado:", user.email);
+                } else {
+                    // Usuario NO logueado
+                    loginBtn.style.display = "flex";
+                }
+            });
+        } else {
+            // Si Firebase está deshabilitado, mostrar botón de login siempre
+            loginBtn.style.display = "flex";
+            loginBtn.textContent = "❌ Subida deshabilitado";
+            loginBtn.disabled = true;
+            loginBtn.style.zIndex = "1000";
+        }
 
         // FUNCION PARA DESCARGAR
         function downloadLocal(blob) {
@@ -352,8 +414,12 @@
         initCamera();
 
 
-        // LOGIN
+        // LOGIN - solo si Firebase está activo
         document.getElementById("login-btn").onclick = async () => {
+            if (!funcionar || !auth) {
+                alert("Firebase está deshabilitado en modo de demostración");
+                return;
+            }
             const provider = new GoogleAuthProvider();
             await signInWithPopup(auth, provider);
             document.getElementById("login-btn").style.display = "none";
@@ -361,8 +427,11 @@
 
         // HACER FOTO
         document.getElementById("snap").onclick = async () => {
-            const user = auth.currentUser;
-            if (!user) return alert("Loguéate primero");
+            // Validar autenticación solo si Firebase está activo
+            if (funcionar && auth) {
+                const user = auth.currentUser;
+                if (!user) return alert("Loguéate primero");
+            }
             const canvas = document.createElement("canvas");
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -379,8 +448,14 @@
         document.getElementById("delete").onclick = () => initCamera();
 
 
-        // SUBIR FOTO Y DESCARGARLA
+        // SUBIR FOTO Y DESCARGARLA - solo si Firebase está activo
         document.getElementById("upload").onclick = async () => {
+            if (!funcionar || !auth || !storage) {
+                alert("Firebase está deshabilitado. Solo se descargará localmente.");
+                downloadLocal(blob);
+                initCamera();
+                return;
+            }
             const user = auth.currentUser;
             if (!user) return alert("Loguéate primero");
             const fileRef = ref(storage, `fotos/${user.email}_${Date.now()}.jpg`);
@@ -389,6 +464,11 @@
             alert("¡Subida con éxito! ❤️");
             initCamera();
         };
+
+        // Ocultar botón instalar si ya está en modo app
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            document.getElementById("installBtn").style.display = "none";
+        }
 
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) document.getElementById("iosMsg").style.display = "block";
         document.getElementById("installBtn").onclick = () => alert("📱 Para instalar:\n\niPhone: Compartir → 'Añadir a pantalla de inicio'\nAndroid: Menú ⋮ → 'Añadir a pantalla de inicio'");
