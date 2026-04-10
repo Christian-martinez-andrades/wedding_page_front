@@ -380,9 +380,7 @@
             facingMode = (facingMode === "user") ? "environment" : "user";
 
             // detener cámara actual
-            if (streamGlobal) {
-                streamGlobal.getTracks().forEach(t => t.stop());
-            }
+            stopCamera();
 
             // reiniciar
             await initCamera();
@@ -410,6 +408,33 @@
                 alert("No se pudo acceder a la cámara");
             }
         }
+
+        // Función para detener la cámara y liberar recursos
+        function stopCamera() {
+            if (streamGlobal) {
+                streamGlobal.getTracks().forEach(track => {
+                    track.stop();
+                    console.log("Cámara detenida para ahorrar batería");
+                });
+                streamGlobal = null;
+            }
+        }
+
+        // Detener cámara al cerrar pestaña/ventana/app
+        window.addEventListener('beforeunload', stopCamera);
+        window.addEventListener('pagehide', stopCamera);
+        window.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopCamera();
+            }
+        });
+
+        // Para PWA: detener cámara cuando la app pasa a segundo plano
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopCamera();
+            }
+        });
 
         initCamera();
 
@@ -440,7 +465,7 @@
             preview.src = URL.createObjectURL(blob);
             preview.style.display = "block";
             video.style.display = "none";
-            streamGlobal.getTracks().forEach(t => t.stop());
+            stopCamera();
             wrapper.classList.add("photo-taken");
         };
 
